@@ -1,41 +1,62 @@
+from turtle import *
+import random
 import numpy as np
+from scipy.stats import levy_stable
+import matplotlib.patches as patches
 import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
 
-from skimage.segmentation import random_walker
-from skimage.data import binary_blobs
-from skimage.exposure import rescale_intensity
-import skimage
+fig, ax = plt.subplots()
+ax.set_xlim(-10,10)
+ax.set_ylim(-10,10)
+line, = ax.plot(0,0)
+x = 0
+y = 0
 
-rng = np.random.default_rng()
+x_data=[]
+y_data=[]
 
-# Generate noisy synthetic data
-data = skimage.img_as_float(binary_blobs(length=128, seed=1))
-sigma = 0.35
-data += rng.normal(loc=0, scale=sigma, size=data.shape)
-data = rescale_intensity(data, in_range=(-sigma, 1 + sigma),
-                         out_range=(-1, 1))
 
-# The range of the binary image spans over (-1, 1).
-# We choose the hottest and the coldest pixels as markers.
-markers = np.zeros(data.shape, dtype=np.uint)
-markers[data < -0.95] = 1
-markers[data > 0.95] = 2
 
-# Run random walker algorithm
-labels = random_walker(data, markers, beta=10, mode='bf')
+def animate_rw(i):
 
-# Plot results
-fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(8, 3.2),
-                                    sharex=True, sharey=True)
-ax1.imshow(data, cmap='gray')
-ax1.axis('off')
-ax1.set_title('Noisy data')
-ax2.imshow(markers, cmap='magma')
-ax2.axis('off')
-ax2.set_title('Markers')
-ax3.imshow(labels, cmap='gray')
-ax3.axis('off')
-ax3.set_title('Segmentation')
+    n = 1000         #steps
+    alpha = 1       #tuning parameter
+    beta = 0      #tuning parameter
+    steps = levy_stable.rvs(alpha=alpha, beta=beta, size=n)
+    maxstep = 75
+    minstep = 5
+    for i in range(n):
 
-fig.tight_layout()
+        if steps[i] > maxstep:
+            step = maxstep
+        elif abs(steps[i]) < minstep:
+            step = minstep
+        else:
+            step = steps[i]
+
+            
+    global x 
+    global y
+    
+
+    direction = random.randint(1, 4)
+    if direction == 1:
+        x += 1
+    elif direction == 2:
+        y += 1
+    elif direction == 3:
+        x += -1
+    elif direction == 4:
+        y += -1
+
+    x_data.append(x)
+    y_data.append(y)
+
+    line.set_xdata(x_data)
+    line.set_ydata(y_data)
+
+    return line,
+# Did not write in anything for frames, since it defaults to passing itertools.count
+anim = FuncAnimation(fig, animate_rw, interval=600)
 plt.show()

@@ -13,15 +13,15 @@ class shark:
     def draw(self):
         turtle = Turtle()
         tp = turtle.position()
-        turtle.screen.bgcolor("cyan")
+        
         n = 1000         #steps
         alpha = 2     #tuning parameter
         beta = 0      #tuning parameter
         steps = levy_stable.rvs(alpha=alpha, beta=beta, size=n)
-        maxstep = 75
-        minstep = 5
+        maxstep = 100
+        minstep = 30
 
-        getscreen()
+        #getscreen()
         for i in range(n):
 
             if steps[i] > maxstep:
@@ -35,5 +35,4 @@ class shark:
             turtle.forward(step)
 
 
-s = shark(0,0)
-s.draw()
+
