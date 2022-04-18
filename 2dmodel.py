@@ -157,3 +157,56 @@ def generate_patch(patch_length):
             l -= 1
     return patch
 
+def create_seascape(patch_length, patch_count, seascape_length, seascape_width):
+    if(seascape_length % patch_length != 0 or seascape_width % patch_length !=0):
+        raise Exception("Seascape length and width must both be dividable by patch length")
+    seascape = np.zeros((seascape_length, seascape_width))
+    i = 0
+    x = 0
+    y = 0
+#     minstep = 1
+#     maxstep = 500
+#     steps = levy_stable.rvs(alpha=1, beta=0, size=(patch_count,2))
+    while(i < patch_count):
+        patch = generate_patch(100)
+        print(patch.shape, x, y)
+        y2 = 0
+        for y1 in range(y, y + patch_length):
+            x2 = 0
+            for x1 in range(x, x+patch_length):
+                if(x1 >= seascape_width):
+                    x1 -= seascape_width
+                if(y1 >= seascape_length):
+                    y1 -= seascape_length
+                seascape[y1][x1] = seascape[y1][x1] + patch[y2][x2]
+                x2+=1
+            y2+=1
+        x = random.randint(0, seascape_width-100)
+        y = random.randint(0, seascape_length-100)
+        i += 1
+#         if abs(steps[i][0]) > maxstep:
+#             stepx = math.copysign(maxstep, steps[i][0])
+#         elif abs(steps[i][0]) < minstep:
+#             stepx = math.copysign(minstep, steps[i][0])
+#         else:
+#             stepx = steps[i][0]
+#         if abs(steps[i][1]) > maxstep:
+#             stepy = math.copysign(maxstep, steps[i][1])
+#         elif abs(steps[i][1]) < minstep:
+#             stepy = math.copysign(minstep, steps[i][1])
+#         else:
+#             stepy = steps[i][1]
+#         newposy = int(y + stepy)
+#         newposx = int(x + stepx)
+#         if(newposy >= 4900):
+#             newposy = newposy - 4900
+#         elif(newposy < 0):
+#             newposy = newposy + 4900
+#         if(newposx >= 2400):
+#             newposx = newposx - 2400
+#         elif(newposx < 0):
+#             newposx = newposx + 2400
+#         y = newposy + patch.shape[1]
+#         x = newposx + patch.shape[0]
+        #print(seascape)
+    return seascape
