@@ -1,6 +1,7 @@
 from turtle import Screen
 from patch import Patch
 from shark import shark
+import time
 
 
 screen = Screen()
@@ -9,4 +10,13 @@ screen.bgcolor("cyan")
 
 
 s = shark(0,0)
-s.draw()
+prey = Patch()
+
+
+sim_on = True
+while sim_on:
+    screen.update()
+    time.sleep(0.1)
+    #prey.draw(-100,0)
+    s.draw()
+    
