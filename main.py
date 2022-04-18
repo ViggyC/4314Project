@@ -9,7 +9,7 @@ screen.setup(width=600, height = 600)
 screen.bgcolor("cyan")
 
 
-s = shark(0,0)
+s = shark(-200,0)
 prey = Patch()
 
 
@@ -17,6 +17,9 @@ sim_on = True
 while sim_on:
     screen.update()
     time.sleep(0.1)
-    #prey.draw(-100,0)
+    prey.draw(-100,-100)
+    prey.draw(-100,100)
+    prey.draw(100,-100)
+    prey.draw(100,100)
     s.draw()
     

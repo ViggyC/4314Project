@@ -69,27 +69,26 @@ import matplotlib as plt
 #       figure out alpha/beta 
 
 
-turtle = Turtle()
-tp = turtle.position()
-n = 1000         #steps
-alpha = 1       #tuning parameter
-beta = 0      #tuning parameter
-steps = levy_stable.rvs(alpha=alpha, beta=beta, size=n)
-maxstep = 75
-minstep = 5
-getscreen()
-for i in range(n):
+# turtle = Turtle()
+# tp = turtle.position()
+# n = 1000         #steps
+# alpha = 1       #tuning parameter
+# beta = 0      #tuning parameter
+# steps = levy_stable.rvs(alpha=alpha, beta=beta, size=n)
+# maxstep = 75
+# minstep = 5
+# getscreen()
+# for i in range(n):
+#     if steps[i] > maxstep:
+#         step = maxstep
+#     elif abs(steps[i]) < minstep:
+#         step = minstep
+#     else:
+#         step = steps[i]
 
-    if steps[i] > maxstep:
-        step = maxstep
-    elif abs(steps[i]) < minstep:
-        step = minstep
-    else:
-        step = steps[i]
-
-    turtle.right(random.randint(0,360))
-    turtle.forward(step)
-    #TODO: Get plankton in area that the shark has passed through and add reward of some kind
+#     turtle.right(random.randint(0,360))
+#     turtle.forward(step)
+#     #TODO: Get plankton in area that the shark has passed through and add reward of some kind
 
 
 
@@ -159,8 +158,8 @@ def generate_patch(patch_length):
     return patch
 
 # plt.figure()
-# patch = generate_patch(100)
-# print(patch)
+patch = generate_patch(100)
+print(patch)
 # plt.plot(patch)
 
 

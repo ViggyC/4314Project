@@ -15,6 +15,9 @@ class shark:
 
         turtle = Turtle()
         tp = turtle.position()
+        turtle.penup()
+        turtle.setpos(self.xpos, self.ypos)
+        turtle.pendown()
         
         n = 1000         #steps
         alpha = 2     #tuning parameter

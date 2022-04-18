@@ -1,62 +1,73 @@
-from turtle import *
-import random
+
+
+
 import numpy as np
-from scipy.stats import levy_stable
-import matplotlib.patches as patches
 import matplotlib.pyplot as plt
-from matplotlib.animation import FuncAnimation
-
-fig, ax = plt.subplots()
-ax.set_xlim(-10,10)
-ax.set_ylim(-10,10)
-line, = ax.plot(0,0)
-x = 0
-y = 0
-
-x_data=[]
-y_data=[]
+import matplotlib.animation as animation 
 
 
+# set a random seed
+np.random.seed(1234)
 
-def animate_rw(i):
-
-    n = 1000         #steps
-    alpha = 1       #tuning parameter
-    beta = 0      #tuning parameter
-    steps = levy_stable.rvs(alpha=alpha, beta=beta, size=n)
-    maxstep = 75
-    minstep = 5
-    for i in range(n):
-
-        if steps[i] > maxstep:
-            step = maxstep
-        elif abs(steps[i]) < minstep:
-            step = minstep
-        else:
-            step = steps[i]
-
-            
-    global x 
-    global y
+def random_walk(N):
+    """
+    Simulates a discrete random walk
+    :param int N : the number of steps to take
+    """
+    # event space: set of possible increments
+    increments = np.array([1, -1])
+    # the probability to generate 1
+    p=0.5
     
+    # the epsilon values
+    random_increments = np.random.choice(increments, N, p)
+    # calculate the random walk
+    random_walk = np.cumsum(random_increments)
+    
+    # return the entire walk and the increments
+    return random_walk, random_increments
 
-    direction = random.randint(1, 4)
-    if direction == 1:
-        x += 1
-    elif direction == 2:
-        y += 1
-    elif direction == 3:
-        x += -1
-    elif direction == 4:
-        y += -1
+# generate a random walk
+N = 500
+R, epsilon = random_walk(N)
 
-    x_data.append(x)
-    y_data.append(y)
+# normalize the random walk using the Central Limit Theorem
+R = R * np.sqrt(1./N)
 
-    line.set_xdata(x_data)
-    line.set_ydata(y_data)
 
+fig = plt.figure(figsize=(21, 10))
+ax = plt.axes(xlim=(0, N), ylim=(np.min(R) - 0.5, np.max(R) + 0.5)) 
+line, = ax.plot([], [], lw=2, color='#0492C2')
+ax.set_xticks(np.arange(0, N+1, 50))
+ax.set_yticks(np.arange(np.min(R) - 0.5, np.max(R) + 0.5, 0.2))
+ax.set_title('2D Random Walk', fontsize=22)
+ax.set_xlabel('Steps', fontsize=18)
+ax.set_ylabel('Value', fontsize=18)
+ax.tick_params(labelsize=16)
+ax.grid(True, which='major', linestyle='--', color='black', alpha=0.4)
+
+# initialization function 
+def init(): 
+    # creating an empty plot/frame 
+    line.set_data([], []) 
+    return line, 
+
+# lists to store x and y axis points 
+xdata, ydata = [], []
+
+# animation function 
+def animate(i):
+    # x, y values to be plotted 
+    y = R[i] 
+    
+    # appending new points to x, y axes points list 
+    xdata.append(i) 
+    ydata.append(y) 
+    line.set_data(xdata, ydata) 
     return line,
-# Did not write in anything for frames, since it defaults to passing itertools.count
-anim = FuncAnimation(fig, animate_rw, interval=600)
-plt.show()
+
+# call the animator	 
+anim = animation.FuncAnimation(fig, animate, init_func=init, frames=N, interval=20, blit=True)
+# save the animation as mp4 video file 
+anim.save('random_walk.gif',writer='imagemagick') 
+
