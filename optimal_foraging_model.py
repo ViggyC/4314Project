@@ -7,6 +7,7 @@ import levy
 from matplotlib import pyplot
 
 def create_seascape_uniform(patch_length, patch_count, seascape_length, seascape_width):
+ 
     if(seascape_length % patch_length != 0 or seascape_width % patch_length !=0):
         raise Exception("Seascape length and width must both be dividable by patch length")
     seascape = np.zeros((seascape_length, seascape_width))
@@ -172,17 +173,17 @@ def walk_to_position(random_walk): #This function takes a random walk as it's pa
             pos.append(y)
     return pos
     
-def generate_seascapes_random(scope):
+def generate_seascapes_random(scope, num_patches):
     seascapes = []
     for i in range(scope):
-        seascape_uniform = create_seascape_uniform(100,50,2500,5000)
+        seascape_uniform = create_seascape_uniform(100,num_patches,2500,5000)
         seascapes.append(seascape_uniform)
     return seascapes
 
-def generate_seascapes_levy(scope):
+def generate_seascapes_levy(scope, num_patches):
     seascapes_ll = []
     for i in range(scope):
-        seascape_levy = create_seascape_levy(100,50,2500,5000)
+        seascape_levy = create_seascape_levy(100,num_patches,2500,5000)
         seascapes_ll.append(seascape_levy)
     return seascapes_ll
         
@@ -215,11 +216,20 @@ def get_consumptions(seascapes, walks):
 
 
 if __name__ == "__main__":
-    levy_seascapes = generate_seascapes_levy(10)
-    levy_walks, levy_positions = generate_levy_walks(20,5000)
+    num_levy_seascapes = int(input("Enter number of Levy Seascapes you would like:"))
+    num_patches_levy = int(input("Enter number of Levy patches you would like:"))
+    levy_seascapes = generate_seascapes_levy(num_levy_seascapes,num_patches_levy )
+    
+    num_levy_walks = int(input("Enter number of Levy walks you would like:"))
+    levy_walks, levy_positions = generate_levy_walks(num_levy_walks,5000)
 
-    random_seascapes = generate_seascapes_random(10)
-    random_walks, random_positions = generate_random_walks(20,5000)
+
+    num_random_seascapes = int(input("Enter number of random Seascapes you would like:"))
+    num_patches_random = int(input("Enter number of random patches you would like:"))
+
+    random_seascapes = generate_seascapes_random(num_random_seascapes, num_patches_random)
+    num_random_walks = int(input("Enter number of random walks you would like:"))
+    random_walks, random_positions = generate_random_walks(num_random_walks,5000)
 
     arr_consumption_new_ll = get_consumptions(levy_seascapes, levy_walks)
     arr_consumption_new_lr = get_consumptions(random_seascapes, levy_walks)
